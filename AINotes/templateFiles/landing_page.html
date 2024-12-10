@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Landing Page</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 40px;
+            background-color: #f4f5f7;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .container {
+            max-width: 960px;
+        }
+        .feature {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .feature h2 {
+            font-family: 'Roboto', sans-serif;
+            margin-bottom: 15px;
+        }
+        .feature p {
+            font-size: 1rem;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eeeeee;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            font-size: 20px; /* Larger font size */
+            padding: 15px 30px; /* Larger padding for a bigger button */
+            border-radius: 30px; /* Rounded corners for the button */
+            box-shadow: 0 5px 15px rgba(0,123,255,.5); /* Subtle shadow for depth */
+            transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+        }
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: #0056b3;
+            box-shadow: 0 8px 25px rgba(0,123,255,.75); /* Enhanced shadow on hover/focus */
+            color: #ffffff; /* Ensuring text color remains white on hover/focus for better readability */
+        }
+        .text-center {
+            margin-bottom: 50px; /* Added margin for better spacing */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center">
+            <h1>Welcome to Our Zoom App</h1>
+            <p class="lead">Simplify your meetings with our seamless integration.</p>
+            <a href="{{ zoom_auth_url }}" class="btn btn-lg btn-primary">Add to Zoom</a>
+        </div>
+
+        <div class="row my-5 g-4 justify-content-center">
+            <div class="col-md-4 feature">
+                <h2>Feature One</h2>
+                <p>Create and Schedule Zoom Meetings.</p>
+            </div>
+            <div class="col-md-4 feature">
+                <h2>Feature Two</h2>
+                <p>Record your meetings and access them.</p>
+            </div>
+            <div class="col-md-4 feature">
+                <h2>Feature Three</h2>
+                <p>State of the art Transcription, Diarization and AI generated notes.</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Copyright &copy; Ashlar Global</p>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap Bundle with Popper -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+SPEAKER 1: Hi, this is Ali and I am recording this video for AI Node Genius. This is going to be a test case for you guys. So, we can go to the domain and we go to login. We'll try to login with ZoomRef for right now. So that we can have Zoom access. It is only for the account which we have registered basically. So this will be particular to that. We'll be able to login with a particular Zoom account with which our app is registered for now. So we can login with Zoom. And then it accepts our request. So we login to our website. Basically, we open ZoomBot in a new portal. In a new browser. And we go to create meetings. We can create an instant meeting over here. We can even create a scheduled meeting over here. We can create an instant meeting. We can give suggestions. Topic testing.
+SPEAKER 2: Zoom submission. And we select the duration.
+SPEAKER 1: And we start the meeting. And then you see this. It says instant meeting created successfully. So the instant meeting has been created for our specific account. Which you can even login when you click on login with Zoom.
+SPEAKER 2: Click okay.
+SPEAKER 1: We get the link. We'll enter this link in a new. And that will probably take us to there.
+SPEAKER 2: Okay.
+SPEAKER 1: So open Zoom meetings.
+SPEAKER 2: Launch meeting.
+SPEAKER 1: It launches a meeting. Now we'll copy our invite for our bot basically. This isn't automated right now. We intend to make this automated but this works. We can copy an invitation. We'll save it somewhere over here.
+SPEAKER 2: Okay.
+SPEAKER 1: And we'll click on the meeting ID. Copy the meeting ID. Paste it over here.
+SPEAKER 2: And we'll enter the password as well.
+SPEAKER 1: And then as you see our bot is also enabled to join the meeting. The bot then joins the meeting. And the meeting is being recorded right now. It is being recorded with the Ashlar account. What we intend is that when all the permissions are given, the bot called meeting is stored somewhere on the server from where we can access for transcription process, etc., etc. So this is this. And we can even cancel a meeting from over here. So end meeting. And you can see the meeting has ended.
+SPEAKER 2: And then recording.
+SPEAKER 1: Likewise you can even schedule a meeting. It's the same flow but we'll schedule for later on. We'll get a meeting ID, meeting link, and we'll do that. All our meetings are available over here right now. They haven't been transcribed because I haven't been clicking on the transcribe button, etc. This is basically a prototype. When we have proper access, we can complete the whole stuff. We can do, for example, what we intend to do is we can upload a sample file also
+SPEAKER 2: and transcribe that.
+SPEAKER 1: And we'll get a response eventually. It will take some time but we'll get a response.

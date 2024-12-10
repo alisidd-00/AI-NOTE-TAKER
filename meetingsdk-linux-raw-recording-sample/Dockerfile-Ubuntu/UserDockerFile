@@ -1,0 +1,51 @@
+# Use base image from the user's repository
+FROM msiddique014/mybaseimage:latest
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the entire demo directory to /app/demo
+COPY demo/ /app/demo/
+
+# Check directories and list contents
+RUN ls -al /app/demo
+
+# Prepare build directory and clean up previous builds
+RUN mkdir -p /app/demo/build && \
+    rm -rf /app/demo/bin /app/demo/build
+
+# Configure the project
+RUN cd /app/demo && pwd && ls -al && \
+    cmake -B build
+
+# Build the project and output to a log file
+RUN cd /app/demo/build && \
+    make > /app/demo/build/build.log 2>&1
+
+# Set the working directory to the source folder
+WORKDIR /app/demo
+
+# Ensure setup-pulseaudio.sh is executable
+RUN chmod +x setup-pulseaudio.sh
+
+# Create the binary directory and a directory for recordings
+RUN mkdir -p /app/demo/bin /app/recordings
+
+# Ensure the setup-pulseaudio.sh and other scripts are in the correct directory
+RUN cp setup-pulseaudio.sh bin/
+RUN echo '#!/bin/bash' > bin/run.sh \
+    && echo './setup-pulseaudio.sh' >> bin/run.sh \
+    && echo './meetingSDKDemo' >> bin/run.sh \
+    && chmod +x bin/run.sh
+
+# Display the path of the recordings directory
+RUN echo "Recordings directory at: /app/demo/bin/recordings"
+
+# Set the working directory to the binary folder
+WORKDIR /app/demo/bin
+
+# Define an environment variable for the config file directory
+ENV CONFIG_FILE /app/config
+
+# Set the default command to execute run.sh script
+CMD ["./run.sh"]

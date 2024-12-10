@@ -1,0 +1,66 @@
+{% extends "layout.html" %} {% block title %}
+<title>Integrations</title>
+{% endblock %} {% block content %}
+<div>
+  {% if message %}
+  <div aria-live="polite" aria-atomic="true" class="toast-container">
+      <div id="toast" class="toast align-items-center text-primary border-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true" data-delay="5000">
+          <div class="d-flex justify-content-between">
+              <div class="toast-body">
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  <div class="ml-2">{{ message }}</div>
+              </div>
+              <button type="button" class="ml-2 mb-1 mr-3 close" data-dismiss="toast" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+      </div>
+  </div>
+  {% endif %}
+
+  <!-- Calendar Sync Cards -->
+  <div class="row mt-4">
+    <div class="col-sm-3 mb-3 d-flex">
+      <div class="card flex-fill">
+        <div class="card-body">
+          <div class="text-center">
+            <img
+              src="../staticFiles/img/google.png"
+              style="width: 131px; margin-bottom: 13px"
+              alt="images"
+            />
+          </div>
+          <div class="text-center">
+            <h5 class="card-title">Google Calendar</h5>
+            <p class="card-text">
+              Sync your calendar with Google to keep your schedules updated
+              seamlessly.
+            </p>
+            <a href="{{ url_for('google_login') }}" class="btn btn-primary">
+              <i class="fab fa-google"></i> Sync Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="timeoutModal" tabindex="-1" role="dialog" aria-labelledby="timeoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+          </div>
+          <div class="modal-body text-center">
+              <p>You have been logged out due to inactivity.</p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="logoutButton" data-dismiss="modal">OK</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+<script src="{{ url_for('static', filename='js/session_timeout.js') }}"></script>
+
+{% endblock content %}

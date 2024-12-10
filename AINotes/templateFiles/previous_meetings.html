@@ -1,0 +1,679 @@
+{% extends "layout.html" %} {% block title %}
+<title>Previous Meetings</title>
+{% endblock %} {% block content %} {% with messages = get_flashed_messages() %}
+{% if messages %}
+<div aria-live="polite" aria-atomic="true" class="toast-container">
+  <div
+    id="toast"
+    class="toast text-primary border-0"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+    data-autohide="true"
+    data-delay="5000"
+  >
+    <div class="d-flex justify-content-between">
+      <div class="toast-body">
+        <i class="fa-solid fa-circle-exclamation text-danger"></i>
+        <div class="ml-2">{{ messages[0] }}</div>
+      </div>
+      <button
+        type="button"
+        class="ml-2 mb-1 mr-3 d-flex mt-2 close"
+        data-dismiss="toast"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var toastElement = document.getElementById("toast");
+    if (toastElement) {
+      var toast = new bootstrap.Toast(toastElement);
+      toast.show();
+    }
+  });
+</script>
+{% endif %} {% endwith %}
+
+<div class="mb-4 mt-3">
+  <div style="border-radius: 15px">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active"
+          id="upcoming-meetings"
+          data-toggle="tab"
+          data-target="#upcoming"
+          type="button"
+          role="tab"
+          aria-controls="profile"
+          aria-selected="false"
+        >
+          Upcoming Meetings
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="occurred-meeting"
+          data-toggle="tab"
+          data-target="#occurred"
+          type="button"
+          role="tab"
+          aria-controls="home"
+          aria-selected="true"
+        >
+          Completed Meetings
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="uploaded-file"
+          data-toggle="tab"
+          data-target="#file"
+          type="button"
+          role="tab"
+          aria-controls="data"
+          aria-selected="false"
+        >
+          Uploaded Files
+        </button>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div
+        class="tab-pane fade show active"
+        id="upcoming"
+        role="tabpanel"
+        aria-labelledby="upcoming-meetings"
+      >
+        <div class="list-main" style="border-radius: 15px; width: 100%">
+          <div class="row heading-table w-100 justify-content-between p-3">
+            <div class="col-4"><p>MEETING</p></div>
+            <div class="col-2"><p>DATE</p></div>
+            <div class="col-2"><p>TIME</p></div>
+            <div class="col-2"><p>Join URL</p></div>
+            <div class="col-2"><p>Passcode</p></div>
+          </div>
+          {% for meeting in upcoming_meetings %}
+          <div class="inner-task-section">
+            <div
+              class="row w-100 table-data justify-content-between align-items-center"
+            >
+              <div class="col-4 d-flex">
+                <div class="task-logo mr-3">
+                  <img src="/staticFiles/img/user1.jpg" />
+                </div>
+                <div>
+                  <a
+                    href="{{ url_for('prev_meeting_info', meeting_id=meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id, meeting_date=(meeting.MDate.strftime('%Y%m%d_%H%M%S') if meeting.__tablename__ == 'meeting' else meeting.start_time.strftime('%Y%m%d_%H%M%S'))) }}"
+                  >
+                    {{ meeting.MTopic if meeting.__tablename__ == 'meeting' else
+                    meeting.topic }}
+                  </a>
+                  <p>
+                    {{ meeting.MID if meeting.__tablename__ == 'meeting' else
+                    meeting.meeting_id }}
+                  </p>
+                </div>
+              </div>
+              <div class="col-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M16 2V6"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M8 2V6"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M3 10H21"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+                {{ meeting.MDate.strftime('%d/%m/%Y') if meeting.__tablename__
+                == 'meeting' else meeting.start_time.strftime('%d/%m/%Y') }}
+              </div>
+              <div class="col-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M12 6V12L16 14"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+                {{ meeting.MDate.strftime('%I:%M %p') if meeting.__tablename__
+                == 'meeting' else meeting.start_time.strftime('%I:%M %p') }}
+              </div>
+              <div class="col-2 meeting-join-link">
+                <a
+                  href="{{ meeting.Meeting_Link if meeting.__tablename__ == 'meeting' else meeting.meeting_link }}"
+                  target="_blank"
+                  >Join</a
+                >
+              </div>
+              <div class="col-2">
+                {{ meeting.Passcode if meeting.__tablename__ == 'meeting' else
+                meeting.passcode }}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div
+        class="tab-pane fade"
+        id="occurred"
+        role="tabpanel"
+        aria-labelledby="occurred-meeting"
+      >
+        <div class="list-main" style="border-radius: 15px; width: 100%">
+          <div class="row heading-table w-100 justify-content-between p-3">
+            <div class="col-5"><p>MEETING</p></div>
+            <div class="col-2"><p>DATE</p></div>
+            <div class="col-2"><p>TIME</p></div>
+            <div class="col-2"><p>STATUS</p></div>
+            <div class="col-1"><p>ACTION</p></div>
+          </div>
+          {% for meeting in occurred_meetings %}
+          <div class="inner-task-section">
+            <div
+              class="row w-100 table-data justify-content-between align-items-center"
+            >
+              <div class="col-5 d-flex">
+                <div class="task-logo mr-3">
+                  <img src="/staticFiles/img/user1.jpg" />
+                </div>
+                <div>
+                  <a
+                    href="{{ url_for('prev_meeting_info', meeting_id=meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id, meeting_date=(meeting.MDate.strftime('%Y%m%d_%H%M%S') if meeting.__tablename__ == 'meeting' else meeting.start_time.strftime('%Y%m%d_%H%M%S'))) }}"
+                  >
+                    {{ meeting.MTopic if meeting.__tablename__ == 'meeting' else
+                    meeting.topic }}
+                  </a>
+                  <p>
+                    {{ meeting.MID if meeting.__tablename__ == 'meeting' else
+                    meeting.meeting_id }}
+                  </p>
+                </div>
+              </div>
+              <div class="col-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M16 2V6"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M8 2V6"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M3 10H21"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+                {{ meeting.MDate.strftime('%d/%m/%Y') if meeting.__tablename__
+                == 'meeting' else meeting.start_time.strftime('%d/%m/%Y') }}
+              </div>
+              <div class="col-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M12 6V12L16 14"
+                    stroke="#98a2b3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+                {{ meeting.MDate.strftime('%I:%M %p') if meeting.__tablename__
+                == 'meeting' else meeting.start_time.strftime('%I:%M %p') }}
+              </div>
+              <div class="col-2">
+                {% set transcription = meeting_has_transcription(meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id, (meeting.MDate.strftime('%Y%m%d_%H%M%S') if meeting.__tablename__ == 'meeting' else meeting.start_time.strftime('%Y%m%d_%H%M%S'))) %}
+                            {% if transcription and (transcription.status == 'completed' or not transcription.status) %}
+                                <i class="fas fa-check text-success"></i> <!-- Completed: Checkmark icon -->
+                            {% elif transcription and transcription.status == 'in_progress' %}
+                                <i class="fas fa-spinner fa-spin text-primary"></i> <!-- In Progress: Spinner icon -->
+                            {% elif transcription and transcription.status == 'incomplete' %}
+                                <i class="fas fa-exclamation-triangle text-warning"></i> <!-- Incomplete: Warning triangle icon -->
+                            {% else %}
+                                <i class="fas fa-times text-danger"></i> <!-- Not transcribed: Cross mark icon -->
+                            {% endif %}
+              </div>
+              <div class="col-1">
+                <form
+                id="activateForm{{ meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id }}"
+                method="POST"
+                novalidate
+              >
+                <input
+                  type="hidden"
+                  name="meeting_id"
+                  value="{{ meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id }}"
+                />
+                <input
+                  type="hidden"
+                  name="passcode"
+                  value="{{ meeting.Passcode if meeting.__tablename__ == 'meeting' else meeting.passcode }}"
+                />
+              </form>
+              
+                <div class="dropdown">
+                  <button
+                    class="btn"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <svg
+                      width="12"
+                      height="14"
+                      fill="currentColor"
+                      class="bi bi-three-dots-vertical"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
+                      ></path>
+                    </svg>
+                  </button>
+                  
+                  <ul class="dropdown-menu p-2">
+                    {% if meeting_has_transcription(meeting.MID if
+                    meeting.__tablename__ == 'meeting' else meeting.meeting_id,
+                    (meeting.MDate.strftime('%Y%m%d_%H%M%S') if
+                    meeting.__tablename__ == 'meeting' else
+                    meeting.start_time.strftime('%Y%m%d_%H%M%S'))) %}
+                    <form
+                      action="{{ url_for('transcribe_page') }}"
+                      method="post"
+                    >
+                      <input
+                        type="hidden"
+                        name="meeting_id"
+                        value="{{ meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id }}"
+                      />
+                      <input
+                        type="hidden"
+                        name="meeting_datetime"
+                        value="{{ meeting.MDate.strftime('%Y%m%d_%H%M%S') if meeting.__tablename__ == 'meeting' else meeting.start_time.strftime('%Y%m%d_%H%M%S') }}"
+                      />
+                      <li><button class="option-button dropdown-item" type="submit">
+                        <i class="fa-solid fa-clipboard mr-2"></i>Transcribe
+                      </button></li>
+                    </form>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="{{ url_for('delete_meeting', meeting_id=meeting.id, meeting_type='meeting' if meeting.__tablename__ == 'meeting' else 'scheduled_meeting') }}"
+                        data-meeting-id="{{ meeting.id }}"
+                        ><i class="fa-solid fa-trash mr-2"></i>Delete</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="share-button"
+                        href="#"
+                        data-link="{{ url_for('share_meeting_data', meeting_id=meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id, meeting_date=(meeting.MDate.strftime('%Y%m%d_%H%M%S') if meeting.__tablename__ == 'meeting' else meeting.start_time.strftime('%Y%m%d_%H%M%S')), _external=True) }}"
+                        ><i class="fa-solid fa-share mr-2"></i>Share</a
+                      >
+                    </li>
+                    {% else %}
+                    <form id="activateForm{{ meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id }}" method="POST" novalidate>
+                      <input type="hidden" name="meeting_id" value="{{ meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id }}">
+                      <input type="hidden" name="passcode" value="{{ meeting.Passcode if meeting.__tablename__ == 'meeting' else meeting.passcode }}">
+                    <button type="submit" class="dropdown-item option-button">
+                      <i class="fa-solid fa-check mr-2"></i>Activate
+                      <span
+                        class="spinner-border spinner-border-sm ml-3"
+                        role="status"
+                        aria-hidden="true"
+                        style="display: none"
+                      ></span>
+                    </button>
+                  </form>
+                    <form
+                      action="{{ url_for('transcribe_page') }}"
+                      method="post"
+                    >
+                      <input
+                        type="hidden"
+                        name="meeting_id"
+                        value="{{ meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id }}"
+                      />
+                      <input
+                        type="hidden"
+                        name="meeting_datetime"
+                        value="{{ meeting.MDate.strftime('%Y%m%d_%H%M%S') if meeting.__tablename__ == 'meeting' else meeting.start_time.strftime('%Y%m%d_%H%M%S') }}"
+                      />
+                      <li><button class="option-button dropdown-item" type="submit">
+                        <i class="fa-solid fa-clipboard mr-2"></i>Transcribe
+                      </button></li>
+                    </form>
+             
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="{{ url_for('delete_meeting', meeting_id=meeting.id, meeting_type='meeting' if meeting.__tablename__ == 'meeting' else 'scheduled_meeting') }}"
+                        data-meeting-id="{{ meeting.id }}"
+                        ><i class="fa-solid fa-trash mr-2"></i>Delete</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="share-button"
+                        href="#"
+                        data-link="{{ url_for('share_meeting_data', meeting_id=meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id, meeting_date=(meeting.MDate.strftime('%Y%m%d_%H%M%S') if meeting.__tablename__ == 'meeting' else meeting.start_time.strftime('%Y%m%d_%H%M%S')), _external=True) }}"
+                        ><i class="fa-solid fa-share mr-2"></i>Share</a
+                      >
+                    </li>
+                    {% endif %}
+
+                    <!-- {% if transcription and (transcription.status == 'completed' or not transcription.status) %}
+                                <a href="#" class="dropdown-item"><i class="fa-solid fa-clipboard mr-2"></i>Transcribe</a>
+                                <button class="dropdown-item" type="submit" class="btn btn-success btn-sm disabled-faded"><i class="fa-solid fa-check mr-2"></i>Activate</button>
+                              {% elif transcription and transcription.status == 'in_progress' %}
+                                <a href="#" class="dropdown-item" disabled><i class="fa-solid fa-clipboard mr-2"></i>Transcribe</a>
+                                <button class="dropdown-item" type="submit" class="btn btn-success btn-sm disabled-faded" disabled><i class="fa-solid fa-check mr-2"></i>Activate</button>
+                              {% else %}
+                                <form action="{{ url_for('transcribe_page') }}" method="post">
+                                  <input type="hidden" name="meeting_id" value="{{ meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id }}">
+                                  <input type="hidden" name="meeting_datetime" value="{{ meeting.MDate.strftime('%Y%m%d_%H%M%S') if meeting.__tablename__ == 'meeting' else meeting.start_time.strftime('%Y%m%d_%H%M%S') }}">
+                                 <button class="dropdown-item" type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-clipboard mr-2"></i> Transcribe</button>
+                                </form> 
+                               <li><a class="dropdown-item" href="{{ url_for('delete_meeting', meeting_id=meeting.id, meeting_type='meeting' if meeting.__tablename__ == 'meeting' else 'scheduled_meeting') }}" data-meeting-id="{{ meeting.id }}"><i class="fa-solid fa-trash mr-2"></i>Delete</a></li>
+                                <li><a class="share-button" href="#" data-link="{{ url_for('share_meeting_data', meeting_id=meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id, meeting_date=(meeting.MDate.strftime('%Y%m%d_%H%M%S') if meeting.__tablename__ == 'meeting' else meeting.start_time.strftime('%Y%m%d_%H%M%S')), _external=True) }}"><i class="fa-solid fa-share mr-2"></i>Share</a></li>
+                              {% endif %} -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div
+        class="tab-pane fade"
+        id="file"
+        role="tabpanel"
+        aria-labelledby="uploaded-file"
+      >
+        <div class="list-main" style="border-radius: 15px; width: 100%">
+          <div class="row heading-table w-100 justify-content-between p-3">
+            <div class="col-2"><p>INDEX NO</p></div>
+            <div class="col-4"><p>FILE NAME</p></div>
+            <div class="col-3"><p>UPLOAD TIME</p></div>
+            <div class="col-3"><p>ACTION</p></div>
+          </div>
+          {% for file in uploaded_files %}
+          <div class="inner-task-section">
+            <div
+              class="row w-100 table-data justify-content-between align-items-center"
+            >
+              <div class="col-2">
+                <div>
+                  <p>{{ loop.index }}</p>
+                </div>
+              </div>
+              <div class="col-4">{{ file.filename }}</div>
+              <div class="col-3">
+                {{ file.upload_time.strftime('%d/%m/%Y %I:%M %p') }}
+              </div>
+              <div class="col-3">
+                <div class="dropdown">
+                  <button
+                    class="btn"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <svg
+                      width="12"
+                      height="14"
+                      fill="currentColor"
+                      class="bi bi-three-dots-vertical"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
+                      />
+                    </svg>
+                  </button>
+                  <ul class="dropdown-menu p-2">
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="{{ url_for('uploaded_file_info', file_id=file.id) }}"
+                        ><i class="fa-solid fa-clipboard mr-2"></i>View
+                        Details</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="{{ url_for('delete_file', file_id=file.id) }}"
+                        data-meeting-id="{{ file.id }}"
+                        ><i class="fa-solid fa-trash mr-2"></i>Delete</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        class="share-button"
+                        data-link="{{ url_for('share_file_data', file_id=file.id, _external=True) }}"
+                        ><i class="fa-solid fa-share mr-2"></i>Share</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="timeoutModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="timeoutModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body text-center">
+        <p>You have been logged out due to inactivity.</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          id="logoutButton"
+          data-dismiss="modal"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="{{ url_for('static', filename='js/previous_meetings.js') }}"></script>
+<script src="{{ url_for('static', filename='js/session_timeout.js') }}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    document
+      .getElementById("share-link")
+      .addEventListener("click", function (e) {
+        e.preventDefault();
+        // Your custom logic here
+        console.log("Link clicked, but not copied or followed.");
+        // You can also use the data-link attribute value here if needed
+        let shareUrl = this.getAttribute("data-link");
+        console.log("Share URL:", shareUrl);
+        // For example, you can use it to open the link in a new tab
+        // window.open(shareUrl, '_blank');
+      });
+  });
+</script>
+<style>
+  #dataTable td,
+  #scheduledMeetingsTable td {
+    padding: 8px; /* Adjust padding as needed to fit buttons */
+  }
+
+  @media (max-width: 768px) {
+    h1,
+    h6 {
+      font-size: 1.25rem; /* Adjust heading sizes for small devices */
+    }
+
+    .table-responsive {
+      font-size: 0.875rem; /* Smaller font size for table content */
+    }
+
+    .modal-content {
+      width: 90%; /* Allow modal to take more screen space */
+      max-width: none; /* Remove max-width restriction */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .modal-content {
+      padding: 10px; /* Reduce padding */
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px; /* Adds space between buttons */
+    justify-content: center; /* Centers buttons in the td element */
+    flex-wrap: nowrap; /* Prevents wrapping of items */
+  }
+
+  .action-buttons .btn-sm {
+    padding: 0.25rem 0.5rem; /* Reduce padding inside the button for a more compact look */
+    font-size: 0.875rem; /* Adjust font size if needed */
+    line-height: 1.5; /* Standard line height for better text alignment */
+  }
+
+  .disabled-faded {
+    opacity: 0.65; /* Adjust opacity to make it look faded */
+    pointer-events: none; /* Ensures the button is not clickable */
+    cursor: not-allowed; /* Changes the cursor to indicate the button is disabled */
+  }
+
+  @media (max-width: 768px) {
+    .action-buttons {
+      justify-content: start; /* Align buttons to the start on smaller screens */
+    }
+    .action-buttons .btn-sm {
+      padding: 0.25rem 0.4rem; /* Even smaller padding on mobile devices */
+    }
+  }
+
+  .btn {
+    width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  .dropdown-menu {
+    min-width: 100px !important;
+  }
+
+  .dropdown-item {
+    padding: 0px 5px !important;
+    font-size: 12px !important;
+  }
+</style>
+
+{% endblock content %}

@@ -1,0 +1,279 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Home</title>
+{% endblock %}
+
+
+{% block content %}
+<!-- Hidden div to store user ID -->
+<div id="userId" style="display: none;">{{ user_id }}</div>
+<div id="userName" style="display: none;">{{ current_user.fname }}</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message|safe }}
+        </div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+
+<!-- Page Heading -->
+<div class="row">
+    <div class="col-lg-12 py-2">
+        <div class="card shadow" style="border-radius: 15px; height: 100vh;">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="home-section nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">My Feed</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="home-section nav-link" id="upcoming-meeting" data-toggle="tab" data-target="#latest" type="button" role="tab" aria-controls="profile" aria-selected="false">Upcoming Meetings</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                
+                <div class="text-center" style="width: 300px ;margin-top: 90px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 2.5H20C20.8284 2.5 21.5 3.17157 21.5 4V8C21.5 8.82843 20.8284 9.5 20 9.5H4C3.17157 9.5 2.5 8.82843 2.5 8V4C2.5 3.17157 3.17157 2.5 4 2.5Z" stroke="#E1D4FE"></path><path d="M4 14.5H20C20.8284 14.5 21.5 15.1716 21.5 16V20C21.5 20.8284 20.8284 21.5 20 21.5H4C3.17157 21.5 2.5 20.8284 2.5 20V16C2.5 15.1716 3.17157 14.5 4 14.5Z" stroke="#E1D4FE"></path></svg>
+                    <p class="message text-center mt-4">Stay up to date with your meetings, catch up on important discussions in a glance.</p>
+                        <!-- <a href="/meetings" class="btn btn-primary" style="background-color: #656CED;border: none;">
+                     
+                        <i class="fas fa-video"></i>
+                        <span class="text ml-1">New</span>
+                    </a> -->
+                    <div class="dropdown">
+                        <button style="background-color: #656CED;border: none;" class="btn btn-primary dropdown-toggle no-arrow" type="button" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-video"></i>
+                            <span class="text ml-2">New</span>
+                        </button>
+                        <div class="home dropdown-menu">
+                          <a class="dropdown-item" href="/meetings">
+                            <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12.6667 2.66666H3.33333C2.59695 2.66666 2 3.26361 2 3.99999V13.3333C2 14.0697 2.59695 14.6667 3.33333 14.6667H12.6667C13.403 14.6667 14 14.0697 14 13.3333V3.99999C14 3.26361 13.403 2.66666 12.6667 2.66666Z" stroke="#98A2B3" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2 6.66666H14" stroke="#98A2B3" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.6665 1.33334V4.00001" stroke="#98A2B3" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.3335 1.33334V4.00001" stroke="#98A2B3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            Schedule new meeting</a>
+                            <a class="dropdown-item" href="/enter_passcode">
+                              <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#98A2B3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M12 1C10.8954 1 10 1.89543 10 3V11C10 12.1046 10.8954 13 12 13C13.1046 13 14 12.1046 14 11V3C14 1.89543 13.1046 1 12 1Z"></path>
+                                  <path d="M19 10V11C19 14.866 15.866 18 12 18V18C8.13401 18 5 14.866 5 11V10"></path>
+                                  <path d="M8 22H16"></path>
+                                  <path d="M12 18V22"></path>
+                              </svg>
+                              Add to live meeting
+                          </a>
+                          <a class="dropdown-item" href="/uploads">
+                            <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14 10V12.6667C14 13.0203 13.8595 13.3594 13.6095 13.6095C13.3594 13.8595 13.0203 14 12.6667 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V10" stroke="#98A2B3" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.3332 5.33333L7.99984 2L4.6665 5.33333" stroke="#98A2B3" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 2V10" stroke="#98A2B3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            Upload audio or video</a>
+                        </div>
+
+                      </div>
+                </div>
+                </div>    
+                <div class="tab-pane fade show" id="latest" role="tabpanel" aria-labelledby="upcoming-meeting">
+                    <div class="list-main" style="border-radius: 15px; width: 100%">
+                        <div class="row heading-table w-100 justify-content-between p-3">
+                          <div class="col-4"><p>MEETING</p></div>
+                          <div class="col-2"><p>DATE</p></div>
+                          <div class="col-2"><p>TIME</p></div>
+                          <div class="col-2"><p>Join URL</p></div>
+                          <div class="col-2"><p>Passcode</p></div>
+                        </div>
+                        {% for meeting in upcoming_meetings %}
+                        <div class="inner-task-section">
+                          <div
+                            class="row w-100 table-data justify-content-between align-items-center"
+                          >
+                            <div class="col-4 d-flex">
+                              <div class="task-logo mr-3">
+                                <img src="/staticFiles/img/user1.jpg" />
+                              </div>
+                              <div>
+                                <a
+                                  href="{{ url_for('prev_meeting_info', meeting_id=meeting.MID if meeting.__tablename__ == 'meeting' else meeting.meeting_id, meeting_date=(meeting.MDate.strftime('%Y%m%d_%H%M%S') if meeting.__tablename__ == 'meeting' else meeting.start_time.strftime('%Y%m%d_%H%M%S'))) }}"
+                                >
+                                  {{ meeting.MTopic if meeting.__tablename__ == 'meeting' else
+                                  meeting.topic }}
+                                </a>
+                                <p>
+                                  {{ meeting.MID if meeting.__tablename__ == 'meeting' else
+                                  meeting.meeting_id }}
+                                </p>
+                              </div>
+                            </div>
+                            <div class="col-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                              >
+                                <path
+                                  d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z"
+                                  stroke="#98a2b3"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                ></path>
+                                <path
+                                  d="M16 2V6"
+                                  stroke="#98a2b3"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                ></path>
+                                <path
+                                  d="M8 2V6"
+                                  stroke="#98a2b3"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                ></path>
+                                <path
+                                  d="M3 10H21"
+                                  stroke="#98a2b3"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                ></path>
+                              </svg>
+                              {{ meeting.MDate.strftime('%d/%m/%Y') if meeting.__tablename__
+                              == 'meeting' else meeting.start_time.strftime('%d/%m/%Y') }}
+                            </div>
+                            <div class="col-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                              >
+                                <path
+                                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                                  stroke="#98a2b3"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                ></path>
+                                <path
+                                  d="M12 6V12L16 14"
+                                  stroke="#98a2b3"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                ></path>
+                              </svg>
+                              {{ meeting.MDate.strftime('%I:%M %p') if meeting.__tablename__
+                              == 'meeting' else meeting.start_time.strftime('%I:%M %p') }}
+                            </div>
+                            <div class="col-2 meeting-join-link">
+                              <a
+                                href="{{ meeting.Meeting_Link if meeting.__tablename__ == 'meeting' else meeting.meeting_link }}"
+                                target="_blank"
+                                >Join</a
+                              >
+                            </div>
+                            <div class="col-2">
+                              {{ meeting.Passcode if meeting.__tablename__ == 'meeting' else
+                              meeting.passcode }}
+                            </div>
+                          </div>
+                        </div>
+                        {% endfor %}
+                      </div>
+                    </div>    
+              </div>
+        </div>
+    </div>
+</div>
+  
+<!-- Custom Timeout Modal -->
+<div class="modal fade" id="timeoutModal" tabindex="-1" role="dialog" aria-labelledby="timeoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body text-center">
+                <p>You have been logged out due to inactivity.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="logoutButton" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- <div id="loadingOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1050;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div class="button-loader" style="border-top-color: #fff;"></div>
+        <p style="color: #fff; text-align: center;">Processing...</p>
+    </div>
+</div> -->
+
+
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+<script src="{{ url_for('static', filename='js/session_timeout.js') }}"></script>
+
+<style>
+    table {
+        border-collapse: separate;
+    }
+
+    th,
+    td {
+        padding: 10px;
+    }
+
+    .copy-notification {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px;
+        background: #4caf50;
+        color: white;
+        border-radius: 5px;
+        animation: fadeOut 2s forwards;
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+
+.button-loader {
+        display: inline-block;
+        vertical-align: middle;
+        width: 1.1em;
+        height: 1.1em;
+        border: 2px solid transparent;
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .disabled-button {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+    .dropdown-item:active {
+            background-color: #eaecf4 !important;
+        }
+        
+</style>
+{% endblock content %}

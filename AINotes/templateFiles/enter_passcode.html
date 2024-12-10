@@ -1,0 +1,164 @@
+{% extends "layout.html" %} {% block title %}
+<title>Enter Meeting Information</title>
+{% endblock %} {% block content %}
+
+<div id="alert-box"></div>
+
+<div class=" mt-5 mb-4">
+  <div class="row">
+    <div class="col-md-6 m-auto">
+      <div class="card shadow" style="border-radius: 30px;">
+        <div class="meeting-logo-image text-center">
+          <img src="../staticFiles/img/logo.png" alt="images" />
+        </div>
+        <div class="heading-meeting">
+          <h5 class="mb-0 text-gray-800 font-weight-bold">Enter Meeting Information</h5>
+        </div>
+        <div class="card-body">
+          <!-- Form for entering meeting information -->
+          <form id="joinMeetingForm" method="POST" action="/enter_passcode">
+            {{ form.hidden_tag() }}
+            <!-- Field for entering Meeting ID -->
+            <div class="form-group">
+              <label for="meeting-id" style="font-weight: 600;">Meeting ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="meeting-id"
+                name="meeting_id"
+                placeholder="Enter Meeting ID"
+                required
+              />
+            </div>
+            <!-- Field for entering Passcode -->
+            <div class="form-group">
+              <label for="passcode" style="font-weight: 600;">Passcode</label>
+              <input
+                type="text"
+                class="form-control"
+                id="passcode"
+                name="passcode"
+                placeholder="Enter Passcode"
+                required
+              />
+            </div>
+            <!-- Submit button for the form -->
+             <div class="text-right">
+                <button
+                type="submit"
+                class="btn btn-primary mt-2"
+                id="joinMeetingButton"
+              >
+              <i class="fas fa-video mr-2"></i>
+                Join Meeting
+                <span
+                  id="loader"
+                  style="display: none"
+                  class="button-loader"
+                ></span>
+              </button>
+             </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add a modal to display success message -->
+<div
+  class="modal fade"
+  id="successModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="successModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="lead font-weight-bold">
+          AI NOTE GENIUS has been notified !!!
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="timeoutModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="timeoutModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body text-center">
+        <p>You have been logged out due to inactivity.</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          id="logoutButton"
+          data-dismiss="modal"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--JavaScript -->
+<script src="{{ url_for('static', filename='js/enter_passcode.js') }}"></script>
+<script src="{{ url_for('static', filename='js/session_timeout.js') }}"></script>
+
+<!-- Bootstrap JS and dependencies for interactive components -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<style>
+  .button-loader {
+    display: inline-block;
+    vertical-align: middle;
+    width: 1.1em;
+    height: 1.1em;
+    border: 2px solid transparent;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .disabled-button {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+</style>
+{% endblock %}

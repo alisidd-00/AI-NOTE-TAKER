@@ -1,0 +1,175 @@
+{% extends "layout.html" %} {% block title %}
+<title>Transcription</title>
+{% endblock %} {% block content %}
+
+<input type="hidden" id="meetingId" value="{{ meeting_id }}">
+<input type="hidden" id="meetingDate" value="{{ meeting_date }}">
+
+
+<div aria-live="polite" aria-atomic="true" class="toast-container">
+    <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true" data-delay="2000">
+        <div class="toast-header">
+            <strong class="mr-auto">Notification</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            Here is your message.
+        </div>
+    </div>
+</div>
+
+<!-- Page Heading -->
+<!-- <div class="card shadow p-3 text-center mb-3">
+  <h1 class="h3 mb-0 text-gray-800" style="font-weight: 600">
+    Transcription And Threads
+  </h1>
+</div> -->
+<!-- <form action="{{ url_for('transcribe_meeting_route') }}" method="post"> -->
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card mb-4" style="max-height: 700px; overflow-y: auto">
+      <div class="card-header">
+        <h6 class="m-0 font-weight-bold" style="font-size: 20px">
+          <img
+            style="width: 26px; margin-right: 9px"
+            src="/staticFiles/img/trans-doc.png"
+            alt="images"
+          />Transcription
+        </h6>
+      </div>
+      <div class="card-body table-trans">{{ csv_table | safe }}</div>
+    </div>
+  </div>
+    <div class="col-lg-6">
+        <div class="card mb-4">
+          <div class="card-header ">
+            <h6 class="m-0 font-weight-bold" style="font-size: 18px">Audio Player</h6>
+          </div>
+          <div class="card-body" style="height: 143px;">
+            {% if audio_file %}
+            <audio id="audio-player" controls>
+              <source
+                src="{{ url_for('get_audio', audio_file_name=audio_file.split('/')[-1]) }}"
+                type="audio/wav"
+              />
+              Your browser does not support the audio element.
+            </audio>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+         <div class="card mb-4">
+      <div class="card-header">
+        <h6 class="m-0 font-weight-bold"style="font-size: 18px">Sentiment Analysis</h6>
+      </div>
+      <div class="card-body">
+        <input
+          type="hidden"
+          id="positivePercentage"
+          value="{{ positive_percentage }}"
+        />
+        <input
+          type="hidden"
+          id="negativePercentage"
+          value="{{ negative_percentage }}"
+        />
+        <input
+          type="hidden"
+          id="neutralPercentage"
+          value="{{ neutral_percentage }}"
+        />
+        <div id="sentimentChart"></div>
+      </div>
+    </div>
+      </div>
+  <div class="col-lg-12">
+    <!-- Threads Card -->
+    <div class="card mb-4">
+      <div class="card-header" style="background-color: rgba(0, 0, 0, 0.03);">
+        <h6 class="m-0 font-weight-bold" style="font-size: 20px">
+          <img
+            style="width: 23px; margin-right: 9px"
+            src="/staticFiles/img/threads.png"
+            alt="images"
+          />Threads
+        </h6>
+      </div>
+      <!-- Dropdowns -->
+      <div>
+        <!-- Keywords Dropdown -->
+        <div class="p-4" style="color: #726767;">
+          <div>
+            <h6 class="m-0 font-weight-bold text-body">Keywords</h6>
+            <ul class="mt-2" style="line-height: 29px;">
+              {% for keyword in keywords.split(',') %}
+              <li>{{ keyword.strip() }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div>
+            <h6 class="m-0 font-weight-bold text-body">Summary</h6>
+            <p id="meeting-summary" class="mt-2" style="line-height: 29px;">
+                {{ summary }}
+            </p>
+          </div>
+          <div>
+            <h6 class="m-0 font-weight-bold text-body">Actions Items</h6>
+            <div id="meeting-action" class="mt-2">
+                {% for item in action %}
+                <p class="text-brighter mb-2">{{ item }}</p>
+                {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+</div>
+<!-- </form> -->
+
+<!-- Custom Timeout Modal -->
+<div
+  class="modal fade"
+  id="timeoutModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="timeoutModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body text-center">
+        <p>You have been logged out due to inactivity.</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          id="logoutButton"
+          data-dismiss="modal"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/session_timeout.js') }}"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="{{ url_for('static', filename='js/transcribe.js') }}"></script>
+
+
+<style>
+    .table-trans table thead tr{
+        text-align: left !important;
+    }
+
+</style>
+{% endblock content %}

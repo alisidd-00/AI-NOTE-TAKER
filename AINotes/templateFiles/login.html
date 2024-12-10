@@ -1,0 +1,100 @@
+{% extends "userLayout.html" %} {% block user %}
+
+<div class="col-xl-6 col-lg-6 col-md-9">
+  <!-- Adjusted column class -->
+  {% if message %}
+  <div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+  </div>
+  {% endif %}
+
+  <div class="card-main card o-hidden shadow-lg">
+    <div class="card-body p-0">
+      <!-- Nested Row within Card Body -->
+      <div class="row">
+        <div class="col-lg-12">
+          <!-- Adjusted column class -->
+          <div class="card-inner-div">
+            <div class="text-center">
+              <img
+                src="../staticFiles/img/logo.png"
+                style="width: 161px; margin-bottom: 13px"
+                alt="images"
+              />
+            </div>
+            <div class="text-center">
+              <h1 class="login-welcome h4 text-gray-900 mb-4">Welcome Back!</h1>
+            </div>
+            <form class="user" method="POST" action="">
+              {{ form.hidden_tag()}}
+              <div class="form-group">
+                {% if form.email.errors %} {{ form.email(class="form-control
+                form-control-user is-invalid", id="exampleInputEmail",
+                placeholder="Enter Email Address...") }}
+                <div class="invalid-feedback">
+                  {% for errors in form.email.errors %}
+                  <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
+                {% else %} {{ form.email(class="form-control form-control-user",
+                id="exampleInputEmail", placeholder="Enter Email Address...")}}
+                {% endif %}
+              </div>
+              <div class="form-group">
+                {% if form.password.errors %} {{ form.password(type="password",
+                class="form-control form-control-user is-invalid",
+                id="exampleInputPassword", placeholder="Password")}}
+                <div class="invalid-feedback">
+                  {% for errors in form.password.errors %}
+                  <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
+                {% else %} {{ form.password(type="password", class="form-control
+                form-control-user", id="exampleInputPassword",
+                placeholder="Password")}} {% endif %}
+              </div>
+              {{ form.submit(class="btn btn-primary btn-user btn-block") }}
+              <hr class="mb-0" />
+              <div class="text-right">
+                <a class="small" href="{{ url_for('forgot_password') }}"
+                  >Forgot Password?</a
+                >
+              </div>
+              <div class="form-check">
+                {{ form.remember(class="form-control-user form-check-input")}}
+                {{ form.remember.label(class="form-check-label")}}
+              </div>
+            </form>
+            <div class="login-buttons-container mt-3">
+              <a
+                class="google-button btn btn-lg btn-google btn-block btn-outline"
+                href="{{ url_for('google_login') }}"
+                ><img
+                  class="google-image"
+                  src="https://img.icons8.com/color/16/000000/google-logo.png"
+                />Login with Google</a
+              >
+              <a
+                class="zoom-btn btn btn-lg btn-block btn-outline"
+                href="{{ url_for('zoom_login') }}"
+              >
+                <img class="zoom-image" src="staticFiles/img/zoom.png" />
+                Login with Zoom</a
+              >
+            </div>
+            <hr />
+            <div class="text-center">
+              <a class="small" href="{{ url_for('register') }}"
+                >Create an Account!</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock user %}

@@ -1,0 +1,313 @@
+{% extends "layout.html" %} {% block title %}
+<title>Uploads</title>
+{% endblock %} {% block content %}
+<!-- Hidden div to store user ID -->
+<div id="userId" style="display: none">{{ user_id }}</div>
+<div id="userName" style="display: none">{{ current_user.fname }}</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  {{ message|safe }}
+</div>
+{% endfor %} {% endif %} {% endwith %}
+<!-- Page Heading -->
+<div class="row">
+  <div class="col-lg-12 py-2">
+    <div class="card shadow" style="border-radius: 15px; height: 100vh">
+      <div class="card-header">
+        <h5 class="m-0 font-weight-bold">
+          <div class="h6 mb-0">
+            <img
+              class="transcription-img"
+              src="/staticFiles/img/transcription.png"
+            />
+            <span class="title-heading">Transcribe Audio or Video</span>
+          </div>
+        </h5>
+      </div>
+      <div class="card-body transcribe-section text-center mt-4">
+        <div class="row no-gutters align-items-center">
+          <div class="col-12">
+            <div class="upload-icon">
+              <i class="fa-solid fa-upload"></i>
+            </div>
+            <div class="file-audio mt-3 font-weight-bold text-gray-800">
+              Upload an audio or video file to generate a transcript
+              <!-- Supported formats: MP3, MP4, M4A, WAV -->
+            </div>
+          </div>
+          <div class="col-12">
+            <form
+              id="uploadForm"
+              method="POST"
+              action="{{ url_for('transcribe') }}"
+              enctype="multipart/form-data"
+            >
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              />
+
+              <div class="form-group mt-2 d-flex flex-column ps-5 pe-5">
+                <label for="file"
+                  >Depending on the size of the audio file, it will be processed
+                  & transcribed in 10 - 15 mins</label
+                >
+                <div class="file-input-wrapper">
+                  <p class="smaller">
+                    Drag and drop <b class="highlighted">MP3, M4A, WAV</b> or
+                    <b class="highlighted">MP4</b> file here, or select files to
+                    upload.
+                  </p>
+                  <input
+                    type="file"
+                    name="file"
+                    id="file"
+                    accept=".mp4, .mp3, .wav"
+                    required
+                  />
+                  <div class="file-name" id="file-name">No file selected</div>
+                </div>
+                <!-- <small class="text-muted">Supported formats: MP3, MP4, M4A, WAV</small> -->
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-primary mt-2"
+                style="background-color: #656ced; border: none"
+              >
+                Transcribe
+                <span
+                  id="transcribeLoader"
+                  style="display: none"
+                  class="button-loader"
+                ></span>
+              </button>
+            </form>
+
+            <!-- <div id="upload-progress" style="display: none;">
+                                  <div class="progress">
+                                      <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                          role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                          aria-valuemax="100" style="width: 0%;">
+                                          0%
+                                      </div>
+                                      <div id="loader" style="display: none;">
+                                          <div class="loader"></div>
+                                          <p id="upload-status">Uploading...</p>
+                                      </div>                                                
+                                  </div>
+                                  <p id="upload-status">Uploading...</p>
+                                  <p id="uploaded-file-name"></p>
+                              </div> -->
+
+            <div id="upload-progress" style="display: none">
+              <div class="progress">
+                <div
+                  class="progress-bar progress-bar-striped progress-bar-animated"
+                  role="progressbar"
+                  aria-valuenow="0"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  style="width: 0%"
+                >
+                  0%
+                </div>
+              </div>
+              <div id="loader" style="display: none">
+                <div class="loader"></div>
+                <p id="upload-status-text">Processing...</p>
+                <!-- Renamed ID -->
+              </div>
+              <p id="final-upload-status" style="display: none">
+                Processing...
+              </p>
+              <!-- Renamed ID -->
+              <p id="uploaded-file-name" style="display: none"></p>
+              <!-- Initially hidden, assuming you'll show it later -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="card shadow mb-4" style="height: 253px; overflow-y: auto;">
+                  <div class="card-header">
+                      <h5 class="m-0">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 6.5H6.5V17.5H17.5V6.5Z" fill="white"></path><path d="M12.84 10.4599L13.344 11.1799L14.136 10.6039V14.7799H15V9.30792H14.28L12.84 10.4599Z" fill="#1E88E5"></path><path d="M11.4715 11.8724C11.784 11.5854 11.978 11.1874 11.978 10.7479C11.978 9.87444 11.2115 9.16394 10.2695 9.16394C9.4685 9.16394 8.7835 9.66844 8.6045 10.3904L9.433 10.6009C9.5155 10.2689 9.867 10.0279 10.2695 10.0279C10.7405 10.0279 11.124 10.3509 11.124 10.7479C11.124 11.1449 10.7405 11.4679 10.2695 11.4679H9.771V12.3319H10.2695C10.81 12.3319 11.266 12.7074 11.266 13.1519C11.266 13.6039 10.833 13.9719 10.3005 13.9719C9.8195 13.9719 9.4085 13.6669 9.3435 13.2629L8.5 13.4009C8.631 14.2189 9.405 14.8359 10.3 14.8359C11.3035 14.8359 12.12 14.0804 12.12 13.1519C12.12 12.6404 11.868 12.1814 11.4715 11.8724Z" fill="#1E88E5"></path><path d="M17 21H7L6.5 19L7 17H17L17.5 19L17 21Z" fill="#FBC02D"></path><path d="M19 17.5L21 17V7L19 6.5L17 7V17L19 17.5Z" fill="#4CAF50"></path><path d="M17 7L17.5 5L17 3H4.5C3.6715 3 3 3.6715 3 4.5V17L5 17.5L7 17V7H17Z" fill="#1E88E5"></path><path d="M17 17V21L21 17H17Z" fill="#E53935"></path><path d="M19.5 3H17V7H21V4.5C21 3.6715 20.3285 3 19.5 3Z" fill="#1565C0"></path><path d="M4.5 21H7V17H3V19.5C3 20.3285 3.6715 21 4.5 21Z" fill="#1565C0"></path></svg>
+                          <span class="title-heading">Upcoming Meetings</span>
+                      </h5>
+                  </div>
+                  <div class="card-body">
+                      <div class="d-flex flex-column align-items-center pt-4">
+                          <i class="fas fa-video"></i>
+                          {% if upcoming_meetings %}
+                          <table>
+                              <thead>
+                                  <tr>
+                                      <th>Meeting Topic</th>
+                                      <th>Date</th>
+                                      <th>Time</th>
+                                      <th>Timezone</th>
+                                      <th></th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  {% for meeting in upcoming_meetings %}
+                                  {% if meeting.start_time > now and not meeting.deleted %}
+                                  <tr>
+                                      <td> 
+                                          {{ meeting.topic }}
+                                      </td>
+                                      <td>
+                                          {{ meeting.start_time.strftime('%Y-%m-%d') }}
+                                      </td>
+                                      <td>
+                                          {{ meeting.start_time.strftime('%H:%M') }}
+                                      </td>
+                                      <td>
+                                          {{ meeting.timezone }}
+                                      </td>
+                                      <td>
+                                          <button class="btn btn-sm btn-info"
+                                              onclick="copyToClipboard('{{ meeting.meeting_link }}')">Copy Link</button>
+                                          <span id="copyStatus_{{ meeting.id }}"></span>
+                                          </form>
+                                      </td>
+                                  </tr>
+                                  {% endif %}
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          {% else %}
+                          <p class="message text-center mt-3">You don't have any upcoming meetings.</p>
+                          <a href="/meetings" class="btn btn-primary btn-icon-split">
+                      
+                              <i class="fas fa-video"></i>
+                              <span class="text">New</span>
+                          </a>
+                          {% endif %}
+                      </div>
+                  </div>
+              </div> -->
+    </div>
+  </div>
+</div>
+
+<!-- Custom Timeout Modal -->
+<div
+  class="modal fade"
+  id="timeoutModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="timeoutModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p>You have been logged out due to inactivity.</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          id="logoutButton"
+          data-dismiss="modal"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div id="loadingOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1050;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div class="button-loader" style="border-top-color: #fff;"></div>
+        <p style="color: #fff; text-align: center;">Processing...</p>
+    </div>
+</div> -->
+
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+<script src="{{ url_for('static', filename='js/session_timeout.js') }}"></script>
+<script>
+  document.getElementById("file").addEventListener("change", function (event) {
+    var fileName = event.target.files[0]
+      ? event.target.files[0].name
+      : "No file selected";
+    var fileNameElement = document.getElementById("file-name");
+    fileNameElement.textContent = fileName;
+    fileNameElement.style.display = "block"; // Show the file name
+  });
+</script>
+<style>
+  table {
+    border-collapse: separate;
+  }
+
+  th,
+  td {
+    padding: 10px;
+  }
+
+  .copy-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px;
+    background: #4caf50;
+    color: white;
+    border-radius: 5px;
+    animation: fadeOut 2s forwards;
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .button-loader {
+    display: inline-block;
+    vertical-align: middle;
+    width: 1.1em;
+    height: 1.1em;
+    border: 2px solid transparent;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .disabled-button {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  .dropdown-item:active {
+    background-color: #eaecf4 !important;
+  }
+</style>
+{% endblock content %}

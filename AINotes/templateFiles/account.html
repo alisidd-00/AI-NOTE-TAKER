@@ -1,0 +1,156 @@
+{% extends "layout.html" %} {% block title %}
+<title>Account</title>
+{% endblock %} {% block content %}
+  <div class="card border rounded">
+    <div class="card-body">
+        <div class="account-profile-img">
+        </div>
+      <h1 class="h4 mb-2 text-gray-900 font-heading text-center">User Information</h1>
+      <!-- Display flash messages here -->
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="alert alert-danger alert-dismissible">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{ messages[0] }}
+      </div>
+      {% endif %} {% endwith %}
+      <form id="nameForm" method="POST" action="/update_name">
+        <div class="row mt-4">
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="fname">First Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="fname"
+                name="fname"
+                value="{{ current_user.fname }}"
+                readonly
+              />
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="lname">Last Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="lname"
+                name="lname"
+                value="{{ current_user.lname }}"
+                readonly
+              />
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="text"
+                class="form-control"
+                id="lname"
+                name="lname"
+                value="{{ current_user.email }}"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <!-- <button type="submit" class="btn btn-primary">Update Name</button> -->
+      </form>
+      {% if current_user.password %}
+      <!-- <h1 class="h4  mt-3 text-gray-900 font-heading">Change your password.</h1> -->
+      <!-- Display flash messages here -->
+      <!-- {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="alert alert-danger alert-dismissible">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{ messages[0] }}
+      </div>
+      {% endif %} {% endwith %} -->
+
+      <!-- Form to change user's password -->
+      <!-- <form method="POST" action="/update_password">
+        <div class="row mt-3">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="new_password">New Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="new_password"
+                name="new_password"
+                required
+              /> -->
+              <!-- <small
+              >Password must be 8 characters long, include uppercase, lowercase,
+              numbers, and special characters.</small
+            > -->
+            <!-- </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="confirm_password">Confirm New Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="confirm_password"
+                name="confirm_password"
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-lock mr-2"></i>Change Password</button>
+        </div>
+      </form> -->
+      {% endif %}
+      <!-- Custom Timeout Modal -->
+      <div
+        class="modal fade"
+        id="timeoutModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="timeoutModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body text-center">
+              <p>You have been logged out due to inactivity.</p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="logoutButton"
+                data-dismiss="modal"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="{{ url_for('static', filename='js/session_timeout.js') }}"></script>
+
+{% endblock content %}

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    {% block title %}{% endblock %}
+    <!-- Custom fonts for this template-->
+    <link
+      href="/staticFiles/vendor/fontawesome-free/css/all.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet"
+    />
+
+    <!-- Custom styles for this template-->
+    <link href="/staticFiles/css/sb-admin-2.min.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
+    />
+    <link href="/staticFiles/css/custom.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+    <link href="/AINotes/staticFiles/img/logo.png" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom CSS for fixed sidebar and header */
+      body {
+        overflow-x: hidden;
+      }
+      .sidebar .nav-item .nav-link span {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+      }
+      #wrapper {
+        display: flex;
+        width: 100%;
+        overflow-x: hidden;
+      }
+
+      #accordionSidebar {
+        position: fixed;
+        height: 100%;
+        z-index: 2;
+        overflow-y: auto;
+        top: 0;
+        left: 0;
+        background-color: rgb(68 85 118) !important;
+        transition: all 0.3s;
+      }
+
+      #content-wrapper {
+        flex-grow: 1;
+        padding-left: 226px; /* Adjust based on your sidebar width */
+        transition: all 0.3s;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 2;
+      }
+
+      .sidebar-toggled .overlay {
+        display: block;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        background-color: #ffffff;
+        z-index: 1;
+        transition: all 0.3s;
+      }
+
+      .sticky-footer {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-color: #ffffff;
+        transition: all 0.3s;
+      }
+      @media (min-width: 768px) {
+        .sidebar.toggled {
+          width: 14rem !important;
+        }
+        .sidebar-toggled .overlay {
+          display: none;
+        }
+      }
+      @media (max-width: 767px) {
+        .sidebar.toggled {
+          overflow: visible;
+          width: 14rem !important;
+        }
+        #accordionSidebar {
+          position: absolute;
+          left: -226px;
+        }
+        .navbar {
+          justify-content: space-between;
+        }
+        #content-wrapper {
+          padding-left: 0;
+        }
+
+        .sidebar-toggled #accordionSidebar {
+          left: 0;
+        }
+      }
+      .sidebar .sidebar-heading {
+        font-size: 20px; /* Adjust the size as needed */
+    }
+    </style>
+  </head>
+
+  <body id="page-top">
+    <div id="wrapper">
+      <!-- Sidebar -->
+      <div class="overlay"></div>
+      <ul
+        class="navbar-nav bg-dark sidebar sidebar-dark accordion"
+        id="accordionSidebar"
+      >
+        <!-- Sidebar - Brand -->
+        <a
+          class="sidebar-brand d-flex align-items-center justify-content-center"
+          style="height: 108px"
+          href="{{ url_for('main') }}"
+        >
+          <div class="logo-image">
+            <img
+              src="{{ url_for('static', filename='img/logo.png') }}"
+              alt="images"
+            />
+          </div>
+        </a>
+        <!-- Heading -->
+        <div class="sidebar-heading mt-3 mb-2">Meeting Notes</div>
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0" />
+
+        <!-- <li class="nav-item" title="Create Meetings">
+          <a class="nav-link collapsed" href="{{ url_for('meetings') }}">
+            <i class="fas fa-video"></i>
+            <span>Create Meetings</span>
+          </a>
+        </li> -->
+        <!-- <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            href="{{ url_for('enter_passcode') }}"
+            title="AI NOTE GENIUS"
+          >
+            <i class="fa-solid fa-note-sticky"></i>
+            <span>AI NOTE GENIUS</span>
+          </a>
+        </li> -->
+        <!-- Divider -->
+        <hr class="sidebar-divider mt-2" />
+      </ul>
+      <!-- End of Sidebar -->
+
+      <!-- Content Wrapper -->
+      <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+          <!-- Topbar -->
+          <nav
+            class="navbar navbar-expand navbar-light bg-white topbar mb-2 static-top shadow"
+          >
+          
+            <div class="d-flex align-items-center">
+              <div class="dropdown">
+                
+                
+              </div>
+              <div class="profile-dropdown">
+                <div onclick="toggle()" class="profile-dropdown-btn">
+                  <div class="profile-img">
+                    <!-- Add your profile image or icon here -->
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </nav>
+          <!-- End of Topbar -->
+
+          <!-- Begin Page Content -->
+          <div class="container-fluid">
+            {% block content %} {% endblock content %}
+          </div>
+          <!-- /.container-fluid -->
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+          <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+              <span>Copyright &copy; Ashlar Global</span>
+            </div>
+          </div>
+          <div class="container my-auto pt-2">
+            <div class="copyright text-center my-auto">
+              <a href="/privacy" target="_blank">Privacy Policy</a>
+              <a href="/tou" target="_blank">Terms of Use</a>
+              <a href="/support" target="_blank">Support Page</a>
+              <a href="/documentation" target="_blank">Documentation</a>
+            </div>
+          </div>
+        </footer>
+        <!-- End of Footer -->
+      </div>
+      <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/staticFiles/vendor/jquery/jquery.min.js"></script>
+    <script src="/staticFiles/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <!-- <script src="/staticFiles/vendor/jquery-easing/jquery.easing.min.js"></script> -->
+
+    <!-- Custom scripts for all pages-->
+    <script src="/staticFiles/js/sb-admin-2.min.js"></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"
+    ></script>
+    <script src="/staticFiles/js/dataTable.js"></script>
+
+    <script>
+      let profileDropdownList = document.querySelector(
+        ".profile-dropdown-list"
+      );
+      let btn = document.querySelector(".profile-dropdown-btn");
+      let overlay = document.querySelector(".overlay");
+      let classList = profileDropdownList.classList;
+
+      const toggle = () => classList.toggle("active");
+
+      window.addEventListener("click", function (e) {
+        if (!btn.contains(e.target)) classList.remove("active");
+      });
+
+      document
+        .getElementById("sidebarToggleTop")
+        .addEventListener("click", function () {
+          document
+            .getElementById("wrapper")
+            .classList.toggle("sidebar-toggled");
+          document
+            .getElementById("accordionSidebar")
+            .classList.toggle("toggled");
+        });
+
+      overlay.addEventListener("click", function () {
+        document.body.classList.remove("sidebar-toggled");
+        document.getElementById("wrapper").classList.toggle("sidebar-toggled");
+      });
+    </script>
+    <style>
+      .nav-drop.dropdown-menu.show {
+        left: -140px !important;
+        top: 39px !important;
+        font-size: 12px !important;
+      }
+    </style>
+  </body>
+</html>
