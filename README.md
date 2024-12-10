@@ -17,7 +17,7 @@ Easy Integration: Seamlessly integrates with Zoom meetings on your account.
 
 ## Setup
 
-- Clone the Repository : **https://github.com/ashlarglobal/AI_Note_Taker_v1.git**
+- Clone the Repository : **https://github.com/alisidd-00/AI-NOTE-TAKER*
 
 ### Download the required packages in requirements.txt
 
